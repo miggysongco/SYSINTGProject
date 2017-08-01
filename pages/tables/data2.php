@@ -380,7 +380,7 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-		University Data - <?php echo $_SESSION['univ'] ?>
+		University Data
         <small>
 		
 		</small>
@@ -433,10 +433,24 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
 				$university = array();
 
 				$currentdate = GETDATE();
+
+        $univList2 = array();
+
+        $univBox = $_SESSION['univBox'];
+
+       
+      
+
+        $univList2 = '"' . implode('","', $univBox) . '"';
+
+       
+       
 			
-				$query = "SELECT name, surname, university, birthday, TIMESTAMPDIFF(YEAR,students.birthday,CURDATE())AS 'Age' 
+				$query = "SELECT name, surname, university, birthday, TIMESTAMPDIFF(YEAR,students.birthday,CURDATE()) AS 'Age' 
 				FROM STUDENTS 
-				WHERE university LIKE '%{$_SESSION['univ']}'";
+				WHERE university IN ($univList2)";
+
+        //LIKE '%{$_SESSION['univBox']}'";
 				
 				$result=mysqli_query($dbc,$query)or die("Error: ".mysqli_error($dbc));
 				
@@ -444,13 +458,13 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
 				
 				while($row= mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					
-			
-					echo "<tr><td align=\'center\'>".$row['Age']."</td>";
-					echo "<td align=\'center\'>".$row['university']."</td>";
-				
-					echo "<td align=\'center\'>".$row['name']."</td>";
-					echo "<td align=\'center\'>".$row['surname']."</td></tr>";
-				
+			     if ($row['Age'] >= $_SESSION['startAge'] && $row['Age'] <= $_SESSION['endAge']) {
+  					echo "<tr><td align=\'center\'>".$row['Age']."</td>";
+  					echo "<td align=\'center\'>".$row['university']."</td>";
+  				
+  					echo "<td align=\'center\'>".$row['name']."</td>";
+  					echo "<td align=\'center\'>".$row['surname']."</td></tr>";
+				  }
 				}
 				
 				

@@ -6,13 +6,26 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
 
 
 		if(isset($_POST["submit"])){
-			$_SESSION['univ'] = $_POST['univList'];
+
+      if(!isset($_POST['univBox']))
+      {
+              echo '<script> alert("You did not select anything!"); window.location = \'data.php\';</script>';
+      } 
+
+
+      else{
+    
+      $_SESSION['univBox'] = $_POST['univBox'];
+      $_SESSION['univCount'] = count($_SESSION['univBox']);
+
+		
+
+      $_SESSION['startAge'] = $_POST['startAge'];
+      $_SESSION['endAge'] = $_POST['endAge'];
 			header('Location: data2.php');
+      }
+
 		}
-
-
-
-
 ?>
 
 
@@ -489,42 +502,77 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
             <!-- /.box-header -->
 			
             <div class="box-body">
-			<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-horizontal form-label-left"  >
+			       <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form-horizontal form-label-left"  >
 					  
-			<div>
-				<label for="dropdownChoices"> Choose a University: </label>
-				
-					<?php
-					
-					
-						$univ = array();
-						
-						$query = "SELECT DISTINCT(university) FROM students ";
-						$result=mysqli_query($dbc,$query)or die("Error: ".mysqli_error($dbc));
-						
-						echo '<select name="univList" id="univList" class="form-control col-md-3 col-xs-3">';
-						echo '<option default>University</option>';
-						while($row=mysqli_fetch_array($result,MYSQLI_ASSOC))
+        			<div>
+        				<label for="checkBox"> Choose a University: </label>
 
-						{
-							echo '<option value="'.$row['university'].'" class="form-control col-md-3 col-xs-9"> '.$row['university'].' </option>';
-						}
-
-						echo '</select>'
-								
-						
-					?>
-				
-				 <div class="form-group">
-                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
-						<input type="submit"  name="submit" class="btn btn-primary" value="Select" />
-						  
-                        </div>
-                      </div>
                     
-				
-				
-			</div>
+
+        					<?php
+        					
+        					
+        						$univ = array();
+        						
+        						$query = "SELECT DISTINCT(university) FROM students ";
+        						$result=mysqli_query($dbc,$query)or die("Error: ".mysqli_error($dbc));
+
+                   
+        						while($row=mysqli_fetch_array($result,MYSQLI_ASSOC))
+
+        						{
+                      echo '<div class="form-group" class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">';
+                      echo '<label><input type="checkbox" name="univBox[]" value="'.$row['university'].'" class="flat-red">
+                         '.$row['university'].' </label>';
+                      echo '</div>'; 
+
+        						
+        						}
+
+        				
+        								
+        						
+        					?>
+
+                </div>
+
+                <div class="form-group">
+                 
+                  <!-- <div class="form-control">       -->
+                  <div class="col-xs-3">
+                   <label for="startAge"> Start Age: </label>
+                     <input type="number" min="0" name="startAge" class="form-control col-xs-3"/>
+                  <!-- </div> -->
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-3">
+                  <!-- <div class="form-control"> -->
+                  <label for="endAge"> End Age: </label>
+                    <input type="number" min="0" name="endAge" class="form-control col-xs-3"/> 
+                    
+                  <!-- </div> -->
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+                   
+                    </div>
+                  </div>
+
+        				  <div class="form-group">
+                  
+                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+        						<input type="submit"  name="submit" class="btn btn-primary" value="Select" />
+        				    </div>
+                  </div>
+                            
+        				
+        				
+        			
 			
 			
 				
@@ -869,6 +917,18 @@ require_once('C:\xampp\htdocs\sysintg_mysqlconnect.php');
         }
      });
    });
+</script>
+<script>
+<script language="JavaScript">
+  function toggle(source) {
+    checkboxes = document.getElementsByName('univBox[]')x
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+    }
+  }
+  </script>
+
+
 </script>
 </body>
 </html>
